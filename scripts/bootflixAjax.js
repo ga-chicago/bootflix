@@ -19,6 +19,26 @@ app.getMovieById = function getMovieById(id) {
   // 3. you should create a new MovieView object based on movie model
   // 4. you call render() on the view
   // 5. your render() should append the `$el` to the DOM
+  var apiRequestURL = 'http://www.omdbapi.com/?i=' + id + '&r=json';
+  console.log(apiRequestURL);
+
+  $.ajax({
+    type: 'get',
+    // dataType: 'json',
+    url: apiRequestURL,
+    success: function(data) {
+      console.log('------Success--------');
+      console.log('Title: ' + data.Title);
+      console.log('Year: ' + data.Year);
+      console.log(data);
+      return data;
+    },
+    error: function(error) {
+      console.log('------Error--------');
+      console.log(error);
+      // todo-- what to return??
+    }
+  });
 
 }
 
