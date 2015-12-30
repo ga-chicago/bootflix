@@ -149,6 +149,13 @@ app.MovieView = function MovieView(options) {
     console.log('------------this.render()----------');
     console.log(this.movieInfo);
     this.movieDiv = this.movieDiv + '<div class="movie">';
+    this.movieDiv = this.movieDiv + '<table><tr><td>';
+    // get poster from movie info
+    // this.movieDiv = this.movieDiv + '<img src="' + this.movieInfo.Poster + '" alt="' + this.movieInfo.Title + '">';
+    // get poster from constructing URL
+    this.movieDiv = this.movieDiv + '<img src="http://img.omdbapi.com/?i=' + this.movieInfo.imdbID + '&apikey=d31f1a94' + '" alt="' + this.movieInfo.Title + '">';
+    this.movieDiv = this.movieDiv + '</td>';
+    this.movieDiv = this.movieDiv + '<td>';
     this.movieDiv = this.movieDiv + '<h3>' + this.movieInfo.Title + '</h3>';
     this.movieDiv = this.movieDiv + '<p>';
     this.movieDiv = this.movieDiv + '<strong>Released:</strong> ' + this.movieInfo.Released + '<br>';
@@ -156,6 +163,7 @@ app.MovieView = function MovieView(options) {
     this.movieDiv = this.movieDiv + '<em>' + this.movieInfo.Genre + '</em>';
     this.movieDiv = this.movieDiv + '</p>';
     this.movieDiv = this.movieDiv + '<p>' + this.movieInfo.Plot + '</p>';
+    this.movieDiv = this.movieDiv + '</td></tr></table>';
     this.movieDiv = this.movieDiv + '</div>';
 
     $('#movie-listing').append(this.movieDiv);
