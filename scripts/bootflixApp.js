@@ -41,6 +41,7 @@ $(document).ready(function(event) {
     event.preventDefault();
     var title = $(":input[name=title]", this).val();
     app.getMovieByTitle(title);
+    $(":input[name=title]").val('');
   });
 
   $("#id-search-form").on("submit", function(event) {

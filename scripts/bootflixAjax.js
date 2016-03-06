@@ -1,29 +1,3 @@
-
-var dieHard=  {
-    "Title":"Die Hard",
-    "Year":"1988",
-    "Rated":"R",
-    "Released":"20 Jul 1988",
-    "Runtime":"131 min",
-    "Genre":"Action, Thriller",
-    "Director":"John McTiernan",
-    "Writer":"Roderick Thorp (novel), Jeb Stuart (screenplay), Steven E. de Souza (screenplay)",
-    "Actors":"Bruce Willis, Bonnie Bedelia, Reginald VelJohnson, Paul Gleason",
-    "Plot":"New York City Detective John McClane has just arrived in Los Angeles to spend Christmas with his wife. Unfortunatly, it is not going to be a Merry Christmas for everyone. A group of terrorists, led by Hans Gruber is holding everyone in the Nakatomi Plaza building hostage. With no way of anyone getting in or out, it's up to McClane to stop them all. All 12!",
-    "Language":"English, German, Italian",
-    "Country":"USA",
-    "Awards":"Nominated for 4 Oscars. Another 6 wins & 2 nominations.",
-    "Poster":"http://ia.media-imdb.com/images/M/MV5BMTY4ODM0OTc2M15BMl5BanBnXkFtZTcwNzE0MTk3OA@@._V1_SX300.jpg",
-    "Metascore":"70",
-    "imdbRating":"8.3",
-    "imdbVotes":"498,849",
-    "imdbID":"tt0095016",
-    "Type":"movie",
-    "Response":"True"
-  };
-
-
-
 // ombd api documentation is available here:
 // http://www.omdbapi.com/
 
@@ -47,11 +21,13 @@ app.getMovieById = function getMovieById(id) {
   // 5. your render() should append the `$el` to the DOM
   $.ajax({
     type: 'GET',
-    url: '',
+    url: 'http://www.omdbapi.com/?i='+id+'&plot=short&r=json',
     dataType: 'json',
     success: function(data){
+      console.log('success!')
       var movie = new app.MovieModel(data);
       var view = new app.MovieView(movie);
+      view.render();
     },
     failure: function(err){
       console.log('Oh no, we couldn\'t get a movie!  Looks like it\'s king of queens reruns again...');
@@ -78,24 +54,24 @@ app.getMovieByTitle = function getMovieByTitle(title) {
   // 3. you should create a new MovieView object based on movie model
   // 4. you call render() on the view
   // 5. your render() should append the `$el` to the DOM
-  var movie = new app.MovieModel(dieHard);
-  var view = new app.MovieView(movie);
-  view.render();
+
+  var urlTitle = title.replace(' ','+');
 
 
-  // $.ajax({
-  //   type: 'GET',
-  //   url: '',
-  //   dataType: 'json',
-  //   success: function(data){
-  //     var movie = new app.MovieModel(data);
-  //     var view = new app.MovieView(movie);
-  //     view.render();
-  //   },
-  //   failure: function(error){
-  //     console.log('Oh no, we couldn\'t get a movie!  Looks like it\'s king of queens reruns again...');
-  //   }
-  // })
+  $.ajax({
+    type: 'GET',
+    url: 'http://www.omdbapi.com/?t='+urlTitle+'&y=&plot=short&r=json',
+    dataType: 'json',
+    success: function(data){
+      console.log('success!');
+      var movie = new app.MovieModel(data);
+      var view = new app.MovieView(movie);
+      view.render();
+    },
+    failure: function(error){
+      console.log('Oh no, we couldn\'t get a movie!  Looks like it\'s king of queens reruns again...');
+    }
+  })
 
 }
 
@@ -106,6 +82,7 @@ app.getMovieByTitle = function getMovieByTitle(title) {
  * @param options  - options object
  */
 app.MovieModel = function MovieModel(options) {
+  // Store the important things
   this.id = options.imdbID;
   this.title = options.Title;
   this.rating = options.Rated;
@@ -114,8 +91,6 @@ app.MovieModel = function MovieModel(options) {
   this.year = options.Year;
   this.genre = options.Genre;
   this.poster = options.Poster;
-  // id, title, rating, director, plot, year, genre should all be in the `options` object
-  // store all the information in the model
 
 }
 
@@ -125,36 +100,36 @@ app.MovieModel = function MovieModel(options) {
  * @param options  - options object
  */
 app.MovieView = function MovieView(options) {
+  // If we don't find a movie options.title === undefined
+  if (options.title){
+    //If there was a message appended saying we couldn't find a move, remove it
+    $('#movie-listing h1').remove();
+    var view = '<div class="movie">'+
+                 '<table>'+
+                   '<tr>'+
+                     '<td>'+
+                       '<img src="'+options.poster+'" alt="'+options.title+'">'+
+                     '</td>'+
+                     '<td>'+
+                       '<h3>'+options.title+'</h3>'+
+                       '<p>'+
+                         '<strong>Released: </strong>' + options.year+'<br>'+
+                         '<strong>Directed By: </strong>' + options.director+'<br>'+
+                         '<em>Genre: </em>'+ options.genre +
+                       '</p>' +
+                       '<p>' + options.plot +'</p>'+
+                     '</td>'+
+                    '</tr>'+
+                  '</table>'+
+               '</div>';
 
-  // options should contain the `model` for which the view is using
-
-  // 1. create a view
-  // 2. create a render() method
-  // 3. render() should a div with a class of '.movie' via string concatenation
-  //    you will want to add the id, title, rating, director, plot, year,
-  //    and genre. See design/movielayout.html
-  // 4. finally, render() will $(selector).append() each new '.movie' to "#movie-listing".
-
-  var view = '<div class="movie">'+
-               '<table>'+
-                 '<tr>'+
-                   '<td>'+
-                     '<img src="'+options.poster+'" alt="'+options.title+'">'+
-                   '</td>'+
-                   '<td>'+
-                     '<h3>'+options.title+'</h3>'+
-                     '<p>'+
-                       '<strong>Released: </strong>' + options.year+'<br>'+
-                       '<strong>Directed By: </strong>' + options.director+'<br>'+
-                       '<em>Genre: </em>'+ options.genre +
-                     '</p>' +
-                     '<p>' + options.plot +'</p>'+
-                   '</td>'+
-                  '</tr>'+
-                '</table>'+
-             '</div>';
-
-  this.render = function(){
-    $('#movie-listing').append(view);
+    this.render = function(){
+      // Add all that stuff ^^ to the top of the page
+      $('#movie-listing').prepend(view);
+    }
+  }else{
+    this.render = function(){
+      $('#movie-listing').prepend('<h1>We found no titles matching your search results... Try again?</h1>');
+    }
   }
 }
