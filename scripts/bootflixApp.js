@@ -34,8 +34,7 @@ app.appStart = function() {
 $(document).ready(function(event) {
   var bootflixApp = new app.appStart();
   console.log("**Bootflix Alpha**");
-  console.log("**Powered by WDI Woodstock**");
-  console.log("**'' '' ''''' ' ' ''  ' ''' '**");
+  console.log("**Powered by WDI RAVENCLAWWWWWWW skreeeee**");
 
   // setting up our form submit event binders so you don't have to
   $("#title-search-form").on("submit", function(event) {
